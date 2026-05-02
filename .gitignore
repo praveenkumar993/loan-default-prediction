@@ -5,9 +5,6 @@ venv/
 data/raw/
 data/processed/
 
-# Model artifacts
-models/
-
 # Python cache
 __pycache__/
 *.pyc
