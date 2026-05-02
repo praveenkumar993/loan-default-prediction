@@ -33,6 +33,11 @@ def prepare_input(customer: dict, feature_names: list) -> pd.DataFrame:
 
     # Keep only columns the model knows about, in correct order
     df = df[feature_names]
+
+    # Force all columns to numeric — None becomes NaN, objects become NaN
+    for col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+
     return df
 
 
@@ -74,12 +79,14 @@ def get_shap_explanation(model, input_df: pd.DataFrame,
                          top_n: int = 5) -> list[dict]:
     """
     Generate SHAP values for a single prediction.
-    Returns top N features driving the decision — both risk-increasing
-    and risk-decreasing factors.
+    Returns top N features driving the decision.
     SR 11-7 compliant explainability.
     """
+    # Keep only numeric columns — drop object and all-None cols
+    numeric_df = input_df.select_dtypes(include=[np.number])
+
     explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(input_df)
+    shap_values = explainer.shap_values(numeric_df)
 
     # For binary classification LightGBM returns list — take class 1
     if isinstance(shap_values, list):
@@ -87,13 +94,13 @@ def get_shap_explanation(model, input_df: pd.DataFrame,
     else:
         shap_vals = shap_values[0]
 
-    feature_names = input_df.columns.tolist()
+    feature_names = numeric_df.columns.tolist()
 
     # Build explanation list
     explanations = []
-    for i, (feat, val, shap_val) in enumerate(
-        zip(feature_names, input_df.iloc[0], shap_vals)
-    ):
+    for feat, val, shap_val in zip(feature_names,
+                                   numeric_df.iloc[0],
+                                   shap_vals):
         explanations.append({
             'feature':    feat,
             'value':      float(val) if not pd.isna(val) else None,
