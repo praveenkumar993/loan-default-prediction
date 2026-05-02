@@ -1,0 +1,20 @@
+services:
+  # ── Main web service ────────────────────────────────────
+  - type: web
+    name: creditiq-loan-default
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+
+    # ── Environment variables ───────────────────────────
+    envVars:
+      - key: PYTHONPATH
+        value: /app
+      - key: API_URL
+        value: http://localhost:8000
+
+    # ── Health check ────────────────────────────────────
+    healthCheckPath: /health
+
+    # ── Auto deploy on push to main ─────────────────────
+    autoDeploy: true
