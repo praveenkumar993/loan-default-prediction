@@ -1,0 +1,25 @@
+# Virtual environment
+venv/
+
+# Data files (too large for GitHub)
+data/raw/
+data/processed/
+
+# Model artifacts
+models/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# MLflow runs
+mlruns/
+
+# Environment variables
+.env
+
+# OS
+.DS_Store
+Thumbs.db
