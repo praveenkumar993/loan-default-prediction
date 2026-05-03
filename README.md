@@ -384,6 +384,12 @@ The `render.yaml` configures:
 - Health check on `/health`
 
 ---
+## Live Deployment
+
+| Service | URL |
+|---|---|
+| API (Swagger UI) | https://loan-default-prediction-afbj.onrender.com |
+| Dashboard | https://creditiq-dashboard-xalv.onrender.com |
 
 ## Key Concepts Explained
 
